@@ -314,11 +314,17 @@ def main():
             print "no pod"
             continue
 
-        if pod['status'] and not "build" in pod['metadata']['name']:
+        if not pod['status']:
+            print "no pod['status']"
+            continue
+
+        if not "build" in pod['metadata']['name']:
             print 'Polling Pod status: %s' % pod['status']['phase']
-        if pod['status'] and "build" in pod['metadata']['name']:
+
+        if "build" in pod['metadata']['name']:
             print 'Polling Build Pod status: %s' % pod['status']['phase']
             build_ran = 1
+
         if pod['status']['phase'] == 'Running' \
             and pod['status'].has_key('podIP') \
             and not "build" in pod['metadata']['name']:
