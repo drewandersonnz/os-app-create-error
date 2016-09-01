@@ -332,7 +332,12 @@ def main():
             print 'Polling Pod status: %s' % pod['status']['phase']
 
             if pod['status']['phase'] == 'Running' and pod['status'].has_key('podIP'):
+
+                # delay to give time for routing
+                time.sleep(5)
+
                 route = oocmd.get_route()
+
                 if route['items']:
                     # FIXME: no port in the route object, is 80 a safe assumption?
                     http_code = curl(route['items'][0]['spec']['host'], 80)
@@ -340,6 +345,7 @@ def main():
                     service = oocmd.get_service()
                     http_code = curl(service['items'][0]['spec']['clusterIP'], \
                         service['items'][0]['spec']['ports'][0]['port'])
+
                 print 'Finished.'
                 print 'Deploy State: Success'
                 print 'Service HTTP response code: %s' % http_code
