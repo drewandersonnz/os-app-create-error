@@ -312,24 +312,27 @@ def main():
 
     # Now we wait until the pod comes up
     for _ in range(120):
+        def loopDebug(msg):
+            print "%s: %s" % (_, msg)
+
         time.sleep(5)
         pod = oocmd.get_pod()
 
         if not pod:
-            print "no pod"
+            loopDebug("no pod")
             continue
 
         if not pod['status']:
-            print "no pod['status']"
+            loopDebug("no pod['status']")
             continue
 
         if "build" in pod['metadata']['name']:
-            print 'Polling Build Pod status: %s' % pod['status']['phase']
+            loopDebug('Polling Build Pod status: %s' % pod['status']['phase'])
             build_ran = 1
             continue
 
         if not "build" in pod['metadata']['name']:
-            print 'Polling Pod status: %s' % pod['status']['phase']
+            loopDebug('Polling Pod status: %s' % pod['status']['phase'])
 
             if pod['status']['phase'] == 'Running' and pod['status'].has_key('podIP'):
 
