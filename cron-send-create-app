@@ -279,6 +279,11 @@ def handle_fail(run_time, oocmd, pod):
     print 'Fetching Pod:'
     print pod
 
+def showPodStatus(pod)
+    print pod
+    print pod['metadata']
+    print pod['status']
+
 def main():
     ''' Do the application creation
     '''
@@ -326,24 +331,26 @@ def main():
         if not "build" in pod['metadata']['name']:
             print 'Polling Pod status: %s' % pod['status']['phase']
 
-        if pod['status']['phase'] == 'Running' \
-            and pod['status'].has_key('podIP') \
-            and not "build" in pod['metadata']['name']:
-            route = oocmd.get_route()
-            if route['items']:
-                # FIXME: no port in the route object, is 80 a safe assumption?
-                http_code = curl(route['items'][0]['spec']['host'], 80)
-            else:
-                service = oocmd.get_service()
-                http_code = curl(service['items'][0]['spec']['clusterIP'], \
-                    service['items'][0]['spec']['ports'][0]['port'])
-            print 'Finished.'
-            print 'Deploy State: Success'
-            print 'Service HTTP response code: %s' % http_code
-            run_time = str(time.time() - start_time)
-            print 'Time: %s' % run_time
-            create_app = 0
-            break
+            if pod['status']['phase'] == 'Running' and pod['status'].has_key('podIP'):
+                route = oocmd.get_route()
+                if route['items']:
+                    # FIXME: no port in the route object, is 80 a safe assumption?
+                    http_code = curl(route['items'][0]['spec']['host'], 80)
+                else:
+                    service = oocmd.get_service()
+                    http_code = curl(service['items'][0]['spec']['clusterIP'], \
+                        service['items'][0]['spec']['ports'][0]['port'])
+                print 'Finished.'
+                print 'Deploy State: Success'
+                print 'Service HTTP response code: %s' % http_code
+                run_time = str(time.time() - start_time)
+                print 'Time: %s' % run_time
+                create_app = 0
+                break
+
+            continue
+
+        showPodStatus(pod)
 
     else:
         run_time = str(time.time() - start_time)
