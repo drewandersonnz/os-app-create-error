@@ -340,7 +340,7 @@ def main():
         oocmd.delete_es_index()
         oocmd.delete_project()
 
-    send_zagg_data(build_ran, create_app, http_code, run_time)
+    print "disabled send_zagg_data(build_ran, create_app, http_code, run_time)"
 
 if __name__ == "__main__":
     main()
