@@ -279,7 +279,7 @@ def handle_fail(run_time, oocmd, pod):
     print 'Fetching Pod:'
     print pod
 
-def showPodStatus(pod)
+def showPodStatus(pod):
     print pod
     print pod['metadata']
     print pod['status']
